@@ -11,7 +11,6 @@ class UserBase(SQLModel):
     telefono: str
     direccion: str
     
-    contrasena_hash: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone  
     
     # Campo Discriminador
     rol: str = Field(index=True)
@@ -29,12 +28,13 @@ class UserBase(SQLModel):
 # Modelo de la Tabla DB
 class User(UserBase, table=True):
     id_usuario: Optional[int] = Field(default=None, primary_key=True)
+    contrasena_hash: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone  
     # animales_publicados: list["Animal"] = Relationship(back_populates="usuario") 
     # solicitudes_hechas: list["Solicitud"] = Relationship(back_populates="usuario_solicitante")
 
 
 class EntidadCreate(UserBase):
-    rol = "organizacion"
+    rol:str = "organizacion"
     nit: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone
     tipo_organizacion: Optional[str] = None
     descripcion: str | None = Field(default=None, nullable=True)
@@ -42,12 +42,17 @@ class EntidadCreate(UserBase):
 
 
 class PublicanteCreate(UserBase):
-    rol = "publicante"
+    rol:str = "publicante"
     cc: str | None = Field(default=None, nullable=True) 
-    contrasena: str # Para recibir y convertir en hash   
+    contrasena: str # Para recibir y convertir en contrasena_hash
+    # 2. Sobrescribir los campos de la organización a None
+    # Esto le indica a Pydantic que estos campos siempre son nulos para este modelo
+    nit: str |  None = Field(default=None)  # Permitir NULL en la DBNone
+    tipo_organizacion:str | None = Field(default=None)  # Permitir NULL en la DBNone
+    descripcion:str | None = Field(default=None)
  
     
-class ReadUser(SQLModel):
+class ResponsePublicante(SQLModel):
     id_usuario: int
     nombre: str
     correo: EmailStr
@@ -55,8 +60,16 @@ class ReadUser(SQLModel):
     direccion: str
     rol: str
     cc: str | None
-    nit: str | None
-    tipo_organizacion: Optional[str]
-    descripcion: str | None
 
+
+class ResponseEntidad(SQLModel):
+    id_usuario: int
+    nombre: str
+    correo: EmailStr
+    telefono: str
+    direccion: str
+    rol: str
+    nit: str | None
+    tipo_organizacion: str | None
+    descripcion: str | None
 ## ANIMALES ###
