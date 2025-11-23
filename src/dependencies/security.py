@@ -9,7 +9,7 @@ from typing import Optional
 
 
 gestor_contraseñas = CryptContext(schemes=["sha256_crypt"], deprecated="auto") ## aLGORIRTMO PARA CIFRAR LA CONTRASEÑA
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") 
+
 
 
 

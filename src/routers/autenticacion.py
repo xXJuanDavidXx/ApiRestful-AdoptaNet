@@ -1,23 +1,31 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
 from sqlmodel import select
 from db import SessionDep
 from pydantic import BaseModel
 from models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad 
-from dependencies.security import get_password_hash
+from dependencies.security import get_password_hash, autenticated_user
+from dependencies.jwt import create_access_token, depGetCurrentUser
+from fastapi.security import OAuth2PasswordRequestForm 
+
+
 
 router = APIRouter()
 
-
-
-
-#@router.get("/token", tags=["autenticacion"])
-#async def login(user: UserCreate, session: SessionDep):
-    # La logica de autenticacion va aqui    
-
-#    return {"message": "Login successful"}
-
-
-
+### Autenticacion y token jwt#
+@router.post("/token", tags=["autenticacion"])
+async def login( session: SessionDep, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    """   
+    La logica de autenticacion va aqui    
+    """
+    user = autenticated_user(session, form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Incorrect username or password")    
+    
+    access_token = create_access_token(data={"sub": user.correo})
+    
+    
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 
@@ -68,9 +76,12 @@ async def register_entidad(userEntidad: EntidadCreate, session: SessionDep):
 
 
 
-### LOGIN DE USUARIOS###
+### Prueba Login###
 
 
+@router.get("/users/me", tags=["autenticacion"])
+async def read_users_me(current_user: depGetCurrentUser):
+    return current_user
 
 
 
