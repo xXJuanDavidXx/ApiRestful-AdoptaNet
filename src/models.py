@@ -72,4 +72,48 @@ class ResponseEntidad(SQLModel):
     nit: str | None
     tipo_organizacion: str | None
     descripcion: str | None
+
+
+
+
 ## ANIMALES ###
+
+
+class AnimalBase(SQLModel):
+    nombre: str
+    especie: str
+    raza: str
+    edad: int | None = Field(default=None, nullable=True)
+    sexo: str
+    descripcion: str | None = Field(default=None, nullable=True)
+    imagen: str
+
+    # PEnsar si el base deberia tener de una vez la relacion con el usuario
+
+
+
+# Mirar como hacer relacion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

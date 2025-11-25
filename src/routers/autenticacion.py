@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
-from sqlmodel import select
 from db import SessionDep
-from pydantic import BaseModel
 from models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad 
 from dependencies.security import get_password_hash, autenticated_user
 from dependencies.jwt import create_access_token, depGetCurrentUser

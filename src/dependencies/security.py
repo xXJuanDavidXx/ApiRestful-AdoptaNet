@@ -1,10 +1,7 @@
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext # Este es un gestor de contraseñas que permite el cifrado y verificar contraseñas
 from db import SessionDep
 from models import User
 from sqlmodel import select
-from datetime import datetime, timedelta
-from typing import Optional
 
 
 

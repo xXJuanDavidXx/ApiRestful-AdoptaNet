@@ -1,6 +1,5 @@
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
-from typing import Optional
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from typing import Annotated
