@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
-from pydantic import EmailStr, field_validator
+from pydantic import EmailStr, BaseModel, field_validator
 
 #### AUTENTICACION Y USUARIOS ####
 
@@ -29,8 +29,8 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id_usuario: Optional[int] = Field(default=None, primary_key=True)
     contrasena_hash: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone  
-    # animales_publicados: list["Animal"] = Relationship(back_populates="usuario") 
-    # solicitudes_hechas: list["Solicitud"] = Relationship(back_populates="usuario_solicitante")
+    animales_publicados: list["Animal"] = Relationship(back_populates="usuario") 
+    #solicitudes_hechas: list["Solicitud"] = Relationship(back_populates="usuario_solicitante")
 
 
 class EntidadCreate(UserBase):
@@ -76,7 +76,7 @@ class ResponseEntidad(SQLModel):
 
 
 
-## ANIMALES ###
+############## ANIMALES ##################
 
 
 class AnimalBase(SQLModel):
@@ -87,14 +87,29 @@ class AnimalBase(SQLModel):
     sexo: str
     descripcion: str | None = Field(default=None, nullable=True)
     imagen: str
-
-    # PEnsar si el base deberia tener de una vez la relacion con el usuario
-
+    adoptado: bool = False 
 
 
-# Mirar como hacer relacion
+class Animal(AnimalBase, table=True):
+    id_animal: int | None = Field(default=None, primary_key=True)
+    id_user: int | None = Field(default=None, foreign_key="user.id_usuario")    
+    usuario : User = Relationship(back_populates="animales_publicados")  # La funcion de backpopulatrs es mantener sincronizadas las dos tablas el usuario que se relaciona a el animal y arriba en animales una lista de usuarios.
 
 
+class AnimalCreate(BaseModel):
+    """
+    Este seria unicamente para la creacion de animales, lo centro unicamente en los datos que si le permito para la creacion 
+
+    """
+    nombre: str
+    especie: str
+    raza: str
+    edad: int | None = Field(default=None, nullable=True)
+    sexo: str
+    descripcion: str | None = Field(default=None, nullable=True)
+    imagen: str
+    
+ 
 
 
 
