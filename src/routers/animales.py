@@ -21,13 +21,26 @@ async def register_animal(animal: AnimalCreate, session: SessionDep):
         raise HTTPException(status_code=404, detail={"Message": "Eso no existe.. ;-;"},)
 
 
-    animal: Animal =  #### ME VOY A DORMIR QUE ME CAIGO DE SUEEEÑOOO
+    animalito: Animal =  Animal.model_validate(dict_animal) 
+
+    session.add(animalito)
+    session.commit()
+    session.refresh(animalito)
+
+    return animalito
 
 
 #### Listar animales ####
 
+@router.get("/ListarAnimales", tags=["animales"])
+async def listarAnimales(session: SessionDep):
+    """
+    Lista Todo el catalogo de animales.
 
+    es evidente por si misma.. no necesita argumentos ....kibalion
+    """
 
+    return session.exec(select(Animal)).all()
 
 
 
