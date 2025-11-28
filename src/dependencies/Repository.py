@@ -87,7 +87,11 @@ class Repository():
         
         return self.session.exec(select(model).where(*args)).first()
 
-
+    def filtrar(self):
+        """
+        Proximo desarrollo uwu
+        """
+        pass
 
 
 def getQueryExec(session: SessionDep):

@@ -108,7 +108,7 @@ class AnimalCreate(BaseModel):
     sexo: str
     descripcion: str | None = Field(default=None, nullable=True)
     imagen: str
-    
+    id_user: int | None = Field(default=None) 
  
 
 
