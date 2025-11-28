@@ -1,18 +1,17 @@
 from jose import jwt, JWTError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from typing import Annotated
 from db import SessionDep
 from sqlmodel import select
 from models import User
+from config import settings
 
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") 
 tokenDependecy = Annotated[str, Depends(oauth2_scheme)]
-SECRET_KEY = "FUTURA_VARIABLE_DE_ENTORNO"
-ALGORITHM = "HS256"
 
 
 def create_access_token(data: dict):
@@ -24,9 +23,9 @@ def create_access_token(data: dict):
     """
 
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=30)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM) # El Pana JOSE Me firma el TOKEN xd
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM) # El Pana JOSE Me firma el TOKEN xd
 
 
 async def get_current_user(token: tokenDependecy, session: SessionDep):
@@ -41,7 +40,7 @@ async def get_current_user(token: tokenDependecy, session: SessionDep):
 
     try:
 
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         correo = payload.get("sub")
         if correo is None:
             raise credentials_excep

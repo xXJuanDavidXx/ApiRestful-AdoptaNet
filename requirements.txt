@@ -1,1 +1,6 @@
 fastapi[standard]
+sqlmodel
+python-jose
+passlib
+pydantic-settings
+

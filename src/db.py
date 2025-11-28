@@ -1,10 +1,11 @@
 from sqlmodel import Session, create_engine, SQLModel
 from typing import Annotated
 from fastapi import Depends, FastAPI
+from config import settings
 
 
 
-engine = create_engine("mysql+pymysql://admin:password@localhost:3306/adoptanet")
+engine = create_engine(settings.DATABASE_URL)
 
 
 def create_tables(app: FastAPI):
