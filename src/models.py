@@ -73,6 +73,7 @@ class ResponseEntidad(SQLModel):
     tipo_organizacion: str | None
     descripcion: str | None
 
+##unu
 
 
 
