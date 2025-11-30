@@ -25,7 +25,7 @@ async def register_animal(animal: AnimalCreate, querydep: QueryDep, current_user
 
     animalito: Animal =  Animal.model_validate(dict_animal) 
 
-    return querydep.crearEnDB(animalito)
+    return querydep.crear_en_db(animalito)
 
 
 #### Listar animales ####
@@ -36,7 +36,9 @@ async def listarAnimales(querydep: QueryDep):
     Lista Todo el catalogo de animales.
 
     es evidente por si misma.. no necesita argumentos ....kibalion
+
+    NOTA: Falta agregar paginacion.
     """
 
-    return querydep.listAll(Animal)
+    return querydep.list_all(Animal)
 

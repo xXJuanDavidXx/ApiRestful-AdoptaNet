@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from datetime import datetime
-from routers import autenticacion, animales
+from routers import autenticacion, animales, solicitudes
 from db import create_tables  
 
 
@@ -8,6 +8,7 @@ from db import create_tables
 app = FastAPI(lifespan=create_tables)
 app.include_router(autenticacion.router)
 app.include_router(animales.router)
+app.include_router(solicitudes.router)
 
 
 @app.get("/")

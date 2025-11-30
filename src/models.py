@@ -51,7 +51,7 @@ class PublicanteCreate(UserBase):
     tipo_organizacion:str | None = Field(default=None)  # Permitir NULL en la DBNone
     descripcion:str | None = Field(default=None)
  
-    
+# Creo las respuestas porque tengo que mostrar unos datos u otros en funcion del rol 
 class ResponsePublicante(SQLModel):
     id_usuario: int
     nombre: str
@@ -73,7 +73,6 @@ class ResponseEntidad(SQLModel):
     tipo_organizacion: str | None
     descripcion: str | None
 
-##unu
 
 
 
@@ -133,10 +132,16 @@ class Solicitud(SolicitudBase, table=True):
 #Los nombres en back_populates deben coincidir exactamente con el nombre del atributo en la OTRA clase. ###TENER PRESENTE
 
 
-class CrearSolicitud(SolicitudBase):
-    id_animal: int = Field(foreign_key="animal.id_animal")
-    id_usuario: int = Field(foreign_key="user.id_usuario")
-    
+class CrearSolicitud(BaseModel):
+    """
+       Esquema de creacion de una solicitud. 
+
+    """
+    id_animal: int  
+    id_usuario: int 
+    nombre_completo: str
+    correo: EmailStr
+    telefono: str
 
 
 

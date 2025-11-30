@@ -50,7 +50,7 @@ async def register_publicante(userPublicante: PublicanteCreate, querydep: QueryD
     publicante.contrasena_hash = passHash
    
    # Implementar querydep
-    querydep.crearEnDB(publicante)
+    querydep.crear_en_db(publicante)
     
     return publicante
 
@@ -70,7 +70,7 @@ async def register_entidad(userEntidad: EntidadCreate, querydep: QueryDep):
     entidad = User.model_validate(userEntidad.model_dump(exclude="contrasena"))
     entidad.contrasena_hash = passHash
     
-    querydep.crearEnDB(entidad)
+    querydep.crear_en_db(entidad)
     
     return entidad
 

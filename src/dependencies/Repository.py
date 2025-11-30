@@ -3,10 +3,10 @@ from db import SessionDep
 from sqlmodel import select, SQLModel
 from typing import Type
 from fastapi import Depends 
-from typing import List
 
-#Lo Logró. Gracias UNIVERSO :)
-
+#NOTA: El uso de Type[Sqlmodel] es porque en las funciones de listar o obtener un objeto de la base de datos, 
+# se requiere el mapa de un modelo para consulta de ese tipo. Por lo que se usa Type para indicar que el argumento
+# es un modelo de sqlmodel. o el "esquema|
 
 class Repository():
     """
@@ -21,11 +21,11 @@ class Repository():
         self.session = session
 
 
-    def listAll(self, model: Type[SQLModel]) -> List[Type[SQLModel]]: # Nota, cuando se usa Type, Es porque estoy requiriendo el mapa de un modelo para consulta de ese tipo.
+    def list_all(self, model: Type[SQLModel]) -> list[SQLModel]: # Nota, cuando se usa Type, Es porque estoy requiriendo el mapa de un modelo para consulta de ese tipo.
         return self.session.exec(select(model)).all()
 
 
-    def getObjectFromTheDatabaseWhitId(self, model: Type[SQLModel], id: int) -> Type[SQLModel]:
+    def get_object_from_the_database_whit_id(self, model: Type[SQLModel], id: int) -> SQLModel | None:
         """
         Devuelve un objeto en la base de datos identificado por un id
 
@@ -36,7 +36,7 @@ class Repository():
         return self.session.get(model, id) 
         
         
-    def crearEnDB(self, model: SQLModel) -> Type[SQLModel]: # Aprendi que en este caso no uso type para | 
+    def crear_en_db(self, model: SQLModel) -> SQLModel: # Aprendi que en este caso no uso type para | 
         """
         Se ocupa unicamente de crear un objeto en la base de datos.
 
@@ -49,10 +49,9 @@ class Repository():
         return model
 
 
-    ### PENSAR EN COMO HACER EL UPDATE Y EL DELETE.
 
 
-    def updatObjectenDB(self, model: SQLModel) -> Type[SQLModel]:
+    def update_object_in_db(self, model: SQLModel) -> SQLModel:
         """
         Se ocupa unicamente de actualizar un objeto en la base de datos.
 
@@ -65,18 +64,22 @@ class Repository():
         return model
 
 
-    def delete_objecte(self, model: SQLModel) -> Type[SQLModel]:
+    def delete_object_in_db(self, model: SQLModel) -> str:
         """
         Se ocupa unicamente de eliminar un objeto en la base de datos.
 
         Args:
             model: La herencia de SQLModel que representa el objeto que se va aguradar en db. El objeto debe venir previamente procesado. 
         """
-        self.session.delete(model)
-        self.session.commit()
-        return model
 
-    def obtener_uno(self, model: Type[SQLModel], *args) -> SQLModel | None:
+        try:
+            self.session.delete(model)
+            self.session.commit()
+            return "Objeto eliminado correctamente"
+        except Exception as e:
+            return f"Error al eliminar el objeto: {str(e)}"
+
+    def  obtener_uno(self, model: Type[SQLModel], *args) -> SQLModel | None:
         """
         Obtiene un objeto de la base de datos bajo cualquier condicion que se le pase
 
@@ -92,6 +95,7 @@ class Repository():
         Proximo desarrollo uwu
         """
         pass
+
 
 
 def getQueryExec(session: SessionDep):
