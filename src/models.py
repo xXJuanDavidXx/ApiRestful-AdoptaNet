@@ -30,7 +30,7 @@ class User(UserBase, table=True):
     id_usuario: Optional[int] = Field(default=None, primary_key=True)
     contrasena_hash: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone  
     animales_publicados: list["Animal"] = Relationship(back_populates="usuario") 
-    #solicitudes_hechas: list["Solicitud"] = Relationship(back_populates="usuario_solicitante")
+    solicitudes: list["Solicitud"] = Relationship(back_populates="usuario") ##REcordar que asi se hace una relacion, en este caso un usuario puede tener muchas solicitudes.
 
 
 class EntidadCreate(UserBase):
@@ -95,7 +95,7 @@ class Animal(AnimalBase, table=True):
     id_animal: int | None = Field(default=None, primary_key=True)
     id_user: int | None = Field(default=None, foreign_key="user.id_usuario")    
     usuario : User = Relationship(back_populates="animales_publicados")  # La funcion de backpopulatrs es mantener sincronizadas las dos tablas el usuario que se relaciona a el animal y arriba en animales una lista de usuarios.
-
+    animal_solicitado: list["Solicitud"] = Relationship(back_populates="animal")
 
 class AnimalCreate(BaseModel):
     """
@@ -110,7 +110,33 @@ class AnimalCreate(BaseModel):
     descripcion: str | None = Field(default=None, nullable=True)
     imagen: str
     id_user: int | None = Field(default=None) 
- 
+
+
+
+
+###### SOLICITUDES de Adopcion #######
+
+
+class SolicitudBase(SQLModel):
+    nombre_completo: str
+    correo: EmailStr
+    telefono: str
+
+
+class Solicitud(SolicitudBase, table=True):
+    id_solicitud: int | None = Field(default=None, primary_key=True)
+    id_animal: int = Field(foreign_key="animal.id_animal")
+    id_usuario: int = Field(foreign_key="user.id_usuario")
+    animal : Animal = Relationship(back_populates="animal_solicitado") ## RECORDAR QUE ES MUCHOS A UNO
+    usuario : User = Relationship(back_populates="solicitudes")
+
+#Los nombres en back_populates deben coincidir exactamente con el nombre del atributo en la OTRA clase. ###TENER PRESENTE
+
+
+class CrearSolicitud(SolicitudBase):
+    id_animal: int = Field(foreign_key="animal.id_animal")
+    id_usuario: int = Field(foreign_key="user.id_usuario")
+    
 
 
 

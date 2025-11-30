@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from models import Animal, User, AnimalCreate
 from db import SessionDep
 from dependencies.Repository import QueryDep 
-
+from dependencies.jwt import depGetCurrentUser
 
 router = APIRouter()
 
@@ -11,7 +11,7 @@ router = APIRouter()
 
 ###  Registrar animales ####
 @router.post("/RegistrarAnimal", response_model=Animal, tags=["animales"])
-async def register_animal(animal: AnimalCreate, querydep: QueryDep, session: SessionDep):
+async def register_animal(animal: AnimalCreate, querydep: QueryDep, current_user: depGetCurrentUser):
     """
     La logica de registro de animales, espera el modelo AnimalCreate que defini en models
 
@@ -39,11 +39,4 @@ async def listarAnimales(querydep: QueryDep):
     """
 
     return querydep.listAll(Animal)
-
-
-
-
-
-
-
 
