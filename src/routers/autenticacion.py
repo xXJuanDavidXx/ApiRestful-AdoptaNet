@@ -40,16 +40,19 @@ async def register_publicante(userPublicante: PublicanteCreate, querydep: QueryD
 
     ARGS:
         userPublicante: El usuario publicante que se va a registrar -> PublicanteCreate
-        session: La sesion de la base de datos -> SessionDep
+        querydep: La dependencia del repositorio -> QueryDep
     """
 
+    # Verificar si el correo ya existe
+    existing_user = querydep.obtener_uno(User, User.correo == userPublicante.correo)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado")
 
     passHash = get_password_hash(userPublicante.contrasena)
 
     publicante = User.model_validate(userPublicante.model_dump(exclude="contrasena"))
     publicante.contrasena_hash = passHash
    
-   # Implementar querydep
     querydep.crear_en_db(publicante)
     
     return publicante
@@ -63,8 +66,14 @@ async def register_entidad(userEntidad: EntidadCreate, querydep: QueryDep):
 
     ARGS:
         userEntidad: El usuario entidad que se va a registrar -> EntidadCreate
-        session: La sesion de la base de datos -> SessionDep
+        querydep: La dependencia del repositorio -> QueryDep
     """
+    
+    # Verificar si el correo ya existe
+    existing_user = querydep.obtener_uno(User, User.correo == userEntidad.correo)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado")
+    
     passHash = get_password_hash(userEntidad.contrasena)    
 
     entidad = User.model_validate(userEntidad.model_dump(exclude="contrasena"))
