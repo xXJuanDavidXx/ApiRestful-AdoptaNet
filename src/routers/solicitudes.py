@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 
-@router.get("/Solicitudes/{user_id}", tags=["Solicitudes"])
+@router.get("/Solicitudes/", tags=["Solicitudes"])
 async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser, skip: int = 0, limit: int = 20): 
     
     animales = querydep.obtener_muchos(Animal, Animal.id_usuario == current_user.id_usuario, skip=0, limit=10000)
@@ -21,8 +21,6 @@ async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser
 
 
     solicitudes = querydep.obtener_muchos(Solicitud, Solicitud.id_animal.in_(animalesIds), skip=skip, limit=limit)    
-
-
 
     return solicitudes
 
