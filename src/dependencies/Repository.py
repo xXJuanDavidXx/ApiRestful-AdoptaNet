@@ -90,11 +90,15 @@ class Repository():
         
         return self.session.exec(select(model).where(*args)).first()
 
-    def filtrar(self):
+    def obtener_muchos(self, model: Type[SQLModel], *args, skip: int = 0, limit: int = 20) -> list[SQLModel]:
         """
-        Proximo desarrollo uwu
+        Obtiene muchos objetos de la base de datos bajo cualquier condicion que se le pase
+
+        ARGS:
+            model: El objeto que se pase debe ser una herencia de -> SQLModel
+            *args: Cualquier condicion que se le pase para obtener el objeto
         """
-        pass
+        return self.session.exec(select(model).where(*args).offset(skip).limit(limit)).all()
 
 
 
