@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from models import Animal, User, AnimalCreate
+from models import Animal, User, AnimalCreate, FilterParams
 from db import SessionDep
 from dependencies.Repository import QueryDep 
 from dependencies.jwt import depGetCurrentUser
@@ -31,14 +31,27 @@ async def register_animal(animal: AnimalCreate, querydep: QueryDep, current_user
 #### Listar animales ####
 
 @router.get("/ListarAnimales", tags=["animales"])
-async def listarAnimales(querydep: QueryDep):
+async def listarAnimales(querydep: QueryDep, skip: int = 0, limit: int = 20, especie: str | None = None, raza: str | None = None, sexo: str | None = None):
     """
     Lista Todo el catalogo de animales.
 
     es evidente por si misma.. no necesita argumentos ....kibalion
 
-    NOTA: Falta agregar paginacion.
+    filtrado.
     """
 
-    return querydep.list_all(Animal)
+    filters = []
+
+    if especie:
+        filters.append(Animal.especie == especie)
+
+    if raza:
+        filters.append(Animal.raza == raza)
+
+    if sexo:
+        filters.append(Animal.sexo == sexo)
+
+    animales = querydep.obtener_muchos(Animal, *filters, skip=skip, limit=limit)
+
+    return animales
 

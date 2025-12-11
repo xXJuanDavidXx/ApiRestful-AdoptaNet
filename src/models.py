@@ -24,6 +24,18 @@ class UserBase(SQLModel):
     descripcion: str | None = Field(default=None, nullable=True)  # Permitir NULL en la DBNone
 
 
+class UserUpdate(SQLModel):
+    nombre: str | None = None
+    telefono: str | None = None
+    direccion: str | None = None
+    
+    # Campos específicos to update (optional)
+    cc: str | None = None
+    nit: str | None = None
+    tipo_organizacion: str | None = None
+    descripcion: str | None = None
+
+
 
 # Modelo de la Tabla DB
 class User(UserBase, table=True):
@@ -144,6 +156,8 @@ class CrearSolicitud(BaseModel):
     telefono: str
 
 
+
+# Filter Params
 
 
 

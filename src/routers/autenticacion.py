@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 from db import SessionDep
-from models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad 
+from models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad, UserUpdate 
 from dependencies.security import get_password_hash, autenticated_user
 from dependencies.jwt import create_access_token, depGetCurrentUser
 from fastapi.security import OAuth2PasswordRequestForm 
@@ -91,6 +91,21 @@ async def register_entidad(userEntidad: EntidadCreate, querydep: QueryDep):
 
 @router.get("/users/me", tags=["autenticacion"])
 async def read_users_me(current_user: depGetCurrentUser):
+    return current_user
+
+
+@router.put("/users/me", response_model=User, tags=["autenticacion"])
+async def update_user(user_update: UserUpdate, querydep: QueryDep, current_user: depGetCurrentUser):
+    """
+    Actualiza los datos del usuario autenticado.
+    """
+    user_data = user_update.model_dump(exclude_unset=True)
+    
+    for key, value in user_data.items():
+        setattr(current_user, key, value)
+        
+    querydep.update_object_in_db(current_user)
+    
     return current_user
 
 

@@ -16,7 +16,6 @@ tokenDependecy = Annotated[str, Depends(oauth2_scheme)]
 
 def create_access_token(data: dict):
     """
-    Crea el token de acceso, Aun trabajo en la funcion requiere Analisis para su correcta implementacion.
 
     ARGS:
         data: Los datos del usuario -> dict  Ejemplo: {"sub": user.email}}
@@ -36,11 +35,10 @@ async def get_current_user(token: tokenDependecy, session: SessionDep):
         token: El token de acceso -> str
         session: La sesion de la base de datos -> SessionDep
     """
-    credentials_excep = HTTPException(status_code=401, detail="No entiendo que onda con tus credenciales", headers={"WWW-Authenticate": "Bearer"})   
+    credentials_excep = HTTPException(status_code=401, detail="O estas desautenticado o el token es invalido o estas husmeando por ahí", headers={"WWW-Authenticate": "Bearer"})   
 
     try:
-
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]) #se decodifica y se verifica el token
         correo = payload.get("sub")
         if correo is None:
             raise credentials_excep

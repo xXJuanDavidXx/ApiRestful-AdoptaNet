@@ -90,7 +90,7 @@ class Repository():
         
         return self.session.exec(select(model).where(*args)).first()
 
-    def obtener_muchos(self, model: Type[SQLModel], *args, skip: int = 0, limit: int = 20) -> list[SQLModel]:
+    def obtener_muchos(self, model: Type[SQLModel], *args, skip: int = 0, limit: int = 10000) -> list[SQLModel]:
         """
         Obtiene muchos objetos de la base de datos bajo cualquier condicion que se le pase
 

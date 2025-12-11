@@ -9,8 +9,17 @@ router = APIRouter()
 
 
 
-@router.get("/Solicitudes/", tags=["Solicitudes"])
-async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser, skip: int = 0, limit: int = 20): 
+@router.get("/Solicitudes", tags=["Solicitudes"])
+async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser, skip: int = 0, limit: int = 20):
+    """
+    lista las solicitudes de adopcion de un usuario.
+
+    Args:
+        querydep (QueryDep): dependencia de la base de datos.
+        current_user (depGetCurrentUser): usuario autenticado.
+        skip (int, optional): numero de solicitudes a saltar. Defaults to 0.
+        limit (int, optional): numero maximo de solicitudes a mostrar. Defaults to 20.
+    """ 
     
     animales = querydep.obtener_muchos(Animal, Animal.id_usuario == current_user.id_usuario, skip=0, limit=10000)
 
@@ -23,6 +32,19 @@ async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser
     solicitudes = querydep.obtener_muchos(Solicitud, Solicitud.id_animal.in_(animalesIds), skip=skip, limit=limit)    
 
     return solicitudes
+
+
+@router.get("/Solicitud/{id_solicitud}", response_model=Solicitud, tags=["Solicitudes"])
+async def detalle_solicitud(id_solicitud: int, querydep: QueryDep, current_user: depGetCurrentUser):
+    """
+    Obtiene el detalle de una solicitud por su id.
+    """
+    solicitud = querydep.obtener_uno(Solicitud, Solicitud.id_solicitud == id_solicitud)
+    
+    if not solicitud:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+        
+    return solicitud
 
 
 @router.post("/RegistrarSolicitud", tags=["Solicitudes"])
