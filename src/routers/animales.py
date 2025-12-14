@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from models import Animal, User, AnimalCreate, FilterParams
-from db import SessionDep
-from dependencies.Repository import QueryDep 
-from dependencies.jwt import depGetCurrentUser
+from ..models import Animal, User, AnimalCreate
+from ..db import SessionDep
+from ..dependencies.Repository import QueryDep 
+from ..dependencies.jwt import depGetCurrentUser
 
 router = APIRouter()
 

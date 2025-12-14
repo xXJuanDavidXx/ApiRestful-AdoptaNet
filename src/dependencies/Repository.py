@@ -1,5 +1,5 @@
 from typing import Annotated
-from db import SessionDep
+from ..db import SessionDep
 from sqlmodel import select, SQLModel
 from typing import Type
 from fastapi import Depends 

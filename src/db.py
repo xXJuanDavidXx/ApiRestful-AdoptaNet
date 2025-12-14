@@ -1,7 +1,7 @@
 from sqlmodel import Session, create_engine, SQLModel
 from typing import Annotated
 from fastapi import Depends, FastAPI
-from config import settings
+from .config import settings
 
 
 

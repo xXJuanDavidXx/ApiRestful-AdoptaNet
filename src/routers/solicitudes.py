@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from dependencies.jwt import depGetCurrentUser
-from dependencies.Repository import QueryDep
-from models import Solicitud, CrearSolicitud, User, Animal
+from ..dependencies.jwt import depGetCurrentUser
+from ..dependencies.Repository import QueryDep
+from ..models import Solicitud, CrearSolicitud, User, Animal
 
 
 
@@ -21,7 +21,7 @@ async def listar_solicitudes(querydep: QueryDep, current_user: depGetCurrentUser
         limit (int, optional): numero maximo de solicitudes a mostrar. Defaults to 20.
     """ 
     
-    animales = querydep.obtener_muchos(Animal, Animal.id_usuario == current_user.id_usuario, skip=0, limit=10000)
+    animales = querydep.obtener_muchos(Animal, Animal.id_user == current_user.id_usuario, skip=0, limit=10000)
 
 
     ## SACARA LISTA DE ANIMALES CON ID, 

@@ -3,10 +3,10 @@ from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from typing import Annotated
-from db import SessionDep
+from ..db import SessionDep
 from sqlmodel import select
-from models import User
-from config import settings
+from ..models import User
+from ..config import settings
 
 
 

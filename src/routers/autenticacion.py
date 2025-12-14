@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
-from db import SessionDep
-from models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad, UserUpdate 
-from dependencies.security import get_password_hash, autenticated_user
-from dependencies.jwt import create_access_token, depGetCurrentUser
+from ..db import SessionDep
+from ..models import User, EntidadCreate, PublicanteCreate, ResponsePublicante, ResponseEntidad, UserUpdate 
+from ..dependencies.security import get_password_hash, autenticated_user
+from ..dependencies.jwt import create_access_token, depGetCurrentUser
 from fastapi.security import OAuth2PasswordRequestForm 
-from dependencies.Repository import QueryDep
+from ..dependencies.Repository import QueryDep
 
 
 router = APIRouter()
@@ -20,6 +20,8 @@ async def login( session: SessionDep, form_data: Annotated[OAuth2PasswordRequest
         session: La sesion de la base de datos -> SessionDep
         form_data: Los datos del usuario -> OAuth2PasswordRequestForm
     """
+    print(form_data.username)
+    print(form_data.password)
     user = autenticated_user(session, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect username or password")    

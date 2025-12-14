@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
-from routers import autenticacion, animales, solicitudes
-from db import create_tables  
+from .routers import autenticacion, animales, solicitudes
+from .db import create_tables  
 
 
 
